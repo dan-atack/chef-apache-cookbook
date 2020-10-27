@@ -2,10 +2,15 @@ package 'httpd' do
   action :install
 end
 
-file '/var/www/html/index.html' do
-  content "<h1>Hello World!<h1>
-  <h2>IP ADDRESS: #{node['ipaddress']}</h2>
-  <h2>HOSTNAME: #{node['hostname']}</h2>"
+template '/var/www/html/index.html' do
+  source 'index.html.erb'
+  variables(
+    :server_name => 'THE GREATEST WEB SERVER',
+    :hostname => node['hostname'],
+    :ipaddress => node['ipaddress']
+  )
+  action :create
+  owner 'root'
 end
 
 service 'httpd' do
